@@ -1,0 +1,10 @@
+-- 먼저 Supabase Authentication > Users에서 교사의 이메일/비밀번호 계정을 만드세요.
+-- 아래 이메일을 실제 교사 이메일로 바꾼 뒤 SQL Editor에서 실행합니다.
+-- 이 파일에는 비밀번호나 API 키를 넣지 않습니다.
+insert into binome_private.teachers(user_id)
+select id from auth.users where lower(email) = lower('teacher@example.com')
+on conflict (user_id) do nothing;
+
+-- 한 행이 보여야 등록 완료입니다. 0행이면 Auth의 이메일을 확인하세요.
+select u.email, t.created_at
+from binome_private.teachers t join auth.users u on u.id = t.user_id;

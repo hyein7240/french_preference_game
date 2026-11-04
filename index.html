@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#8b9e64">
+  <meta name="description" content="프랑스어로 짝의 취향을 묻고, 우리 반에서 나와 비슷한 친구를 찾아보세요.">
+  <meta name="referrer" content="no-referrer">
+  <title>Binôme — 너와 나, 우리의 취향</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="preload" href="./assets/fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./config.js" defer></script>
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+  <div id="app"><main class="loading-shell"><p>Binôme을 준비하고 있어요…</p></main></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="dialog-title">
+    <form method="dialog">
+      <span class="eyebrow">확인해 주세요</span>
+      <h2 id="dialog-title"></h2>
+      <p id="dialog-description"></p>
+      <div class="button-row"><button class="button secondary" value="cancel">취소</button><button class="button danger" id="dialog-confirm" value="confirm">삭제하기</button></div>
+    </form>
+  </dialog>
+  <noscript><p class="notice">이 활동에는 JavaScript가 필요해요. 브라우저 설정에서 허용한 뒤 다시 열어 주세요.</p></noscript>
+</body>
+</html>

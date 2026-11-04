@@ -1,0 +1,13 @@
+{
+  "name": "binome-nos-gouts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "고등학교 프랑스어 짝 인터뷰와 우리 반 선호도 대시보드",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/prepare-pages.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
