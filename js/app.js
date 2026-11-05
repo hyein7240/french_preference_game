@@ -169,7 +169,7 @@ function init() {
           ${rows.map(d=>`<div class="owned-row"><span>${e(d.name)} <small class="muted">· ${d.submitted_at ? d.dirty ? "수정 중" : "제출 완료" : "작성 중"}</small></span><button class="button small secondary" data-action="resume" data-id="${e(d.id)}" ${disabled()}>${d.submitted_at ? "수정" : "이어 쓰기"}</button></div>`).join("")}
         </details>` : ""}
       </section>
-    </div>;
+    </div>`;
   }
 
   function renderProgress(d) {
