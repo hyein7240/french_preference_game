@@ -128,7 +128,7 @@ function init() {
     else page = renderHome();
     app.innerHTML = `<div class="app-shell">
       <header class="site-header">
-        <a class="brand" href="#/" aria-label="Binôme 홈"><img src="./assets/logo.svg" alt=""><span class="brand-name">Binôme<span class="brand-caption">너와 나, 우리의 취향</span></span></a>
+        <a class="brand" href="#/" aria-label="홈"><img src="./assets/logo.svg" alt=""><span class="brand-name"><span class="brand-caption">너와 나, 우리의 취향</span></span></a>
         <nav class="main-nav" aria-label="주 메뉴">
           <a class="nav-link ${navActive === "home" ? "active" : ""}" href="#/" ${navActive === "home" ? 'aria-current="page"' : ""}>${icon("chat",17)}짝 인터뷰</a>
           <a class="nav-link ${navActive === "dashboard" ? "active" : ""}" href="#/dashboard" ${navActive === "dashboard" ? 'aria-current="page"' : ""}>${icon("chart",17)}우리 반 대시보드</a>
@@ -148,18 +148,10 @@ function init() {
   function renderHome() {
     const rows = owned();
     return `<div class="home-layout">
-      <section class="intro-panel" aria-label="활동 소개">
-        <span class="eyebrow">ENSEMBLE, EN FRANÇAIS</span>
-        <h2 class="intro-title" lang="fr">Toi, moi<br>&amp; <em>nos goûts.</em></h2>
-        <p class="intro-korean">너와 나, 우리의 취향</p>
-        <p class="intro-copy">같은 듯 다른 우리.<br>프랑스어로 묻고 답하며<br>짝의 취향을 하나씩 발견해요.</p>
-        <div class="intro-illustration" aria-hidden="true"><div class="speech" lang="fr">Et toi ?<span class="speech-small">너는 어때?</span></div><div class="speech" lang="fr">Moi aussi !<span class="speech-small">나도 그래!</span></div><span class="sparkle">✧</span></div>
-        <div class="intro-meta"><span class="color-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>5 QUESTIONS · 2 PERSONNES</span></div>
+      <section class="intro-panel" aria-label="짝 인터뷰">
+        <h1 class="intro-title" tabindex="-1">나와 가장 잘 맞는 친구는</h1>
       </section>
       <section class="welcome-card card">
-        <span class="eyebrow">ON FAIT CONNAISSANCE ?</span>
-        <h1 tabindex="-1" lang="fr">Prénom de mon/ma binôme</h1>
-        <p class="subcopy">내 짝의 이름</p>
         <form class="home-form" data-form="start" id="start-form">
           ${errorBox()}
           <label class="field" for="class-code"><span class="field-label">우리 반 코드</span>
@@ -177,10 +169,7 @@ function init() {
           ${rows.map(d=>`<div class="owned-row"><span>${e(d.name)} <small class="muted">· ${d.submitted_at ? d.dirty ? "수정 중" : "제출 완료" : "작성 중"}</small></span><button class="button small secondary" data-action="resume" data-id="${e(d.id)}" ${disabled()}>${d.submitted_at ? "수정" : "이어 쓰기"}</button></div>`).join("")}
         </details>` : ""}
       </section>
-    </div>
-    <div class="how-it-works" aria-label="활동 순서">
-      ${[["chat","01. 질문해요","프랑스어로 <span>짝에게</span> 묻기"],["edit","02. 기록해요","짝의 답변 <span>다섯 개</span> 기록하기"],["users","03. 발견해요","나와 비슷한 <span>취향의</span> 친구 찾기"]].map(([ic,title,copy])=>`<div class="how-step"><span class="step-icon">${icon(ic,19)}</span><div><h3>${title}</h3><p>${copy}</p></div></div>`).join("")}
-    </div>`;
+    </div>;
   }
 
   function renderProgress(d) {
