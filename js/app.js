@@ -151,7 +151,7 @@ function init() {
       ${config.mode === "demo" ? `<div class="mode-banner"><span><i class="dot"></i><strong>체험 모드</strong> · 예시 응답이 들어 있어요. 이 기기에서만 저장돼요.</span><span lang="en">DEMO</span></div>` : ""}
       ${storageBlocked() ? '<p class="notice warning" style="margin-top:16px" role="status">이 브라우저가 임시 저장을 허용하지 않아요. 창을 닫으면 작성 중인 답변과 수정 권한이 사라질 수 있어요.</p>' : ""}
       <main class="page" id="main" tabindex="-1">${page}</main>
-      <footer class="site-footer"><span>Binôme · 너와 나, 우리의 취향</span><span lang="fr">Un peu de français, beaucoup de découvertes.</span></footer>
+      
     </div>`;
     if (sameView && activeId) document.getElementById(activeId)?.focus({preventScroll:true});
     if (sameView) for (const id of openedDetails) document.getElementById(id)?.setAttribute("open", "");
@@ -199,7 +199,7 @@ function init() {
       <section class="question-card card">${errorBox()}
         <div class="question-topline"><span class="question-number">QUESTION ${String(n+1).padStart(2,"0")} / 05</span></div>
         <h1 class="question-title" tabindex="-1" lang="fr">${e(q.title)}</h1><p class="question-ko">${e(q.ko)}</p>
-        <div class="dialogue-box"><span class="pill dialogue-verb" lang="fr">${e(q.verb)}</span><p class="dialogue-caption">${icon("chat",16)}질문하고 대답해봅시다!</p>
+        <div class="dialogue-box"><p class="dialogue-caption">${icon("chat",16)}질문하고 대답해봅시다!</p>
           <div class="dialogue-line"><span class="role-tag">질문</span><p lang="fr">${e(q.ask)}</p><button type="button" class="speaker-button" data-action="play-audio" data-audio-key="${q.id}-question" aria-label="질문 음성 듣기">${icon("volume",17)}</button></div>
           <div class="dialogue-line"><span class="role-tag">대답</span><p lang="fr">${e(q.answer)} <span class="answer-phrase">${e(answerPhrase(q,answer))}</span>${q.suffix ? " "+e(q.suffix) : "."}</p><button type="button" class="speaker-button" data-action="play-audio" data-audio-key="${q.id}-answer-${Number.isInteger(answer) ? answer+1 : ""}" aria-label="선택한 대답 문장 음성 듣기" ${filled ? "" : "disabled"}>${icon("volume",17)}</button></div>
         </div>
@@ -214,7 +214,7 @@ function init() {
 
   function renderReview() {
     const d = draft(); if (!d) return renderHome();
-    return `<div class="review-wrap"><div class="page-heading"><div><span class="eyebrow">PRESQUE FINI !</span><h1 tabindex="-1">짝의 답을 확인해요.</h1><p class="subcopy"><strong>${e(d.name)}</strong>의 취향을 잘 기록했나요?</p></div><span class="pill">${d.answers.filter(Number.isInteger).length} / 5 선택</span></div>
+    return `<div class="review-wrap"><div class="page-heading"><div><h1 tabindex="-1">${e(d.name)}의 답변을 잘 기록했나요?</h1></div><span class="pill">${d.answers.filter(Number.isInteger).length} / 5 선택</span></div>
       <section class="review-card card">${errorBox()}<div>
         ${QUESTIONS.map((q,i)=>{ const a=q.options[d.answers[i]]; return `<div class="review-item"><span class="review-number">${String(i+1).padStart(2,"0")}</span><div class="review-copy"><p class="review-question" lang="fr">${e(q.title)}</p><p class="review-answer" lang="fr">${a ? `${LETTERS[d.answers[i]]}. ${e(a.fr)}` : "아직 선택하지 않았어요."}</p>${a ? `<p class="review-ko">${e(a.ko)}</p>` : ""}</div><button class="button small secondary" data-action="edit-question" data-step="${i}" aria-label="${i+1}번 답변 수정">수정</button></div>`; }).join("")}
       </div><p class="notice">${config.mode === "demo" ? "체험 모드에서는 이 기기에 저장돼요." : "제출하면 우리 반 대시보드에 반영돼요."} 제출한 뒤에도 이 기기에서 답변을 수정할 수 있어요.</p>
