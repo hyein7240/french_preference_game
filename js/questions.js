@@ -33,8 +33,8 @@ export const QUESTIONS = Object.freeze([
     id: "q4", verb: "ne pas aimer", short: "좋아하지 않는 것", title: "Mon/Ma binôme n’aime pas…",
     ko: "내 짝은 이걸 좋아하지 않아요…", ask: "Qu’est-ce que tu n’aimes pas ?", answer: "Je n’aime pas",
     options: [
-      { fr: "Une classe sans climatisation en plein été", ko: "한여름 에어컨 없는 교실" },
-      { fr: "Une classe sans chauffage en plein hiver", ko: "한겨울 히터 없는 교실" }
+      { fr: "La classe sans climatisation en plein été", ko: "한여름 에어컨 없는 교실" },
+      { fr: "La classe sans chauffage en plein hiver", ko: "한겨울 히터 없는 교실" }
     ]
   },
   {

@@ -404,7 +404,7 @@ function init() {
       const questionIndex=Number(target.dataset.question), optionIndex=Number(target.value);
       d.answers[questionIndex]=optionIndex; d.dirty=true; saveDraft(d); render();
       announce(`${LETTERS[optionIndex]} 보기를 선택했어요.`);
-      playAudio(`${QUESTIONS[questionIndex].id}-option-${optionIndex+1}`);
+      playAudio(`${QUESTIONS[questionIndex].id}-answer-${optionIndex+1}`);
     }
     if(target.id==="my-name") {
       client.selectedByRoom[client.code]=target.value; state.showAllMatches=false; persist(); render();
