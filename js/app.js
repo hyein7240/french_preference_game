@@ -22,7 +22,8 @@ const PATHS = {
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
   trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
-  spark: '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>'
+  spark: '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>',
+  volume: '<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7m3-10a9 9 0 0 1 0 13"/>'
 };
 function icon(name, size = 20, cls = "") {
   return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PATHS[name] || PATHS.check}</svg>`;
@@ -52,6 +53,7 @@ function init() {
   let refreshPromise = null;
   let dashboardGeneration = 0;
   let toastTimer;
+  let activeAudio = null;
   let renderedView = "";
   let lastInteractionAt = 0;
 
@@ -81,6 +83,17 @@ function init() {
     return state.error ? `<div class="form-error" id="form-error" role="alert" tabindex="-1">${icon("info",18)}<span>${e(state.error)}</span></div>` : "";
   }
   function announce(message) { document.getElementById("announcer").textContent = message; }
+  function playAudio(key) {
+    if (!key) return;
+    if (activeAudio) { activeAudio.pause(); activeAudio.currentTime = 0; }
+    const audio = new Audio(`./assets/audio/${encodeURIComponent(key)}.mp3`);
+    activeAudio = audio;
+    audio.addEventListener("error", () => {
+      if (activeAudio === audio) { activeAudio = null; toast("해당 음성 파일이 아직 준비되지 않았어요."); }
+    }, { once: true });
+    void audio.play().catch(() => {});
+  }
+
   function toast(message) {
     const el = document.getElementById("toast"); el.textContent = message; el.hidden = false;
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 4500);
@@ -173,7 +186,7 @@ function init() {
   }
 
   function renderProgress(d) {
-    return `<ol class="progress-nav" aria-label="인터뷰 진행 상황">${QUESTIONS.map((q,i)=>`<li><button id="progress-${i}" class="progress-step ${Number.isInteger(d.answers[i]) ? "answered" : ""} ${state.step === i ? "current" : ""}" data-action="step" data-step="${i}" aria-label="${i+1}번 질문: ${q.short}${Number.isInteger(d.answers[i]) ? ", 선택 완료" : ""}" ${state.step===i ? 'aria-current="step"' : ""}><span class="number">${Number.isInteger(d.answers[i]) && state.step!==i ? icon("check",14) : i+1}</span><span class="label">${e(q.short)}</span></button></li>`).join("")}</ol>`;
+    return `<ol class="progress-nav" aria-label="인터뷰 진행 상황">${QUESTIONS.map((q,i)=>`<li><button id="progress-${i}" class="progress-step ${Number.isInteger(d.answers[i]) ? "answered" : ""} ${state.step === i ? "current" : ""}" data-action="step" data-step="${i}" aria-label="${i+1}번 질문: ${q.short}${Number.isInteger(d.answers[i]) ? ", 선택 완료" : ""}" ${state.step===i ? 'aria-current="step"' : ""}><span class="number">${Number.isInteger(d.answers[i]) && state.step!==i ? icon("check",14) : i+1}</span></button></li>`).join("")}</ol>`;
   }
   function renderQuestion() {
     const d = draft(); if (!d) return renderHome();
@@ -184,11 +197,11 @@ function init() {
       <div class="activity-header"><p class="activity-name"><strong>${e(d.name)}</strong>에 대해 알아볼까요?</p><span class="pill">${icon("users",13)}짝 인터뷰</span></div>
       ${renderProgress(d)}
       <section class="question-card card">${errorBox()}
-        <div class="question-topline"><span class="question-number">QUESTION ${String(n+1).padStart(2,"0")} / 05</span><span class="pill" lang="fr">${e(q.verb)}</span></div>
+        <div class="question-topline"><span class="question-number">QUESTION ${String(n+1).padStart(2,"0")} / 05</span></div>
         <h1 class="question-title" tabindex="-1" lang="fr">${e(q.title)}</h1><p class="question-ko">${e(q.ko)}</p>
-        <div class="dialogue-box"><p class="dialogue-caption">${icon("chat",16)}질문하고 대답해봅시다!</p>
-          <div class="dialogue-line"><span class="role-tag">질문</span><p lang="fr">${e(q.ask)}</p></div>
-          <div class="dialogue-line"><span class="role-tag">대답</span><p lang="fr">${e(q.answer)} <span class="answer-phrase">${e(answerPhrase(q,answer))}</span>${q.suffix ? " "+e(q.suffix) : "."}</p></div>
+        <div class="dialogue-box"><span class="pill dialogue-verb" lang="fr">${e(q.verb)}</span><p class="dialogue-caption">${icon("chat",16)}질문하고 대답해봅시다!</p>
+          <div class="dialogue-line"><span class="role-tag">질문</span><p lang="fr">${e(q.ask)}</p><button type="button" class="speaker-button" data-action="play-audio" data-audio-key="${q.id}-question" aria-label="질문 음성 듣기">${icon("volume",17)}</button></div>
+          <div class="dialogue-line"><span class="role-tag">대답</span><p lang="fr">${e(q.answer)} <span class="answer-phrase">${e(answerPhrase(q,answer))}</span>${q.suffix ? " "+e(q.suffix) : "."}</p><button type="button" class="speaker-button" data-action="play-audio" data-audio-key="${q.id}-answer-${Number.isInteger(answer) ? answer+1 : ""}" aria-label="선택한 대답 문장 음성 듣기" ${filled ? "" : "disabled"}>${icon("volume",17)}</button></div>
         </div>
         <p class="choice-heading">짝이 선택한 답을 하나 골라 주세요.</p>
         <fieldset class="options ${q.options.length===2 ? "long" : ""}"><legend class="sr-only">${e(q.ko)} 한 가지 선택</legend>
@@ -196,7 +209,6 @@ function init() {
         </fieldset>
         <div class="activity-actions"><button id="previous-question" class="button secondary" data-action="previous">${icon("back",17)}${state.editingReview ? "전체 답변" : n===0 ? "이름 화면" : "이전 질문"}</button><span class="activity-count">${d.answers.filter(Number.isInteger).length} / 5 선택</span><button id="next-question" class="button" data-action="next" ${!filled ? "disabled" : ""}>${nextText}${icon("arrow",17)}</button></div>
       </section>
-      <p class="save-indicator">${icon("lock",12)}${config.mode === "demo" ? "제출 전까지 답변은 이 기기에 임시 저장돼요." : "‘제출하기’를 누르면 다섯 답변이 함께 저장돼요."}</p>
     </div>`;
   }
 
@@ -389,8 +401,10 @@ function init() {
     const target=event.target;
     if(target.matches('input[name="answer"]')) {
       const d=draft(); if(!d) return;
-      d.answers[Number(target.dataset.question)]=Number(target.value); d.dirty=true; saveDraft(d); render();
-      announce(`${LETTERS[Number(target.value)]} 보기를 선택했어요.`);
+      const questionIndex=Number(target.dataset.question), optionIndex=Number(target.value);
+      d.answers[questionIndex]=optionIndex; d.dirty=true; saveDraft(d); render();
+      announce(`${LETTERS[optionIndex]} 보기를 선택했어요.`);
+      playAudio(`${QUESTIONS[questionIndex].id}-option-${optionIndex+1}`);
     }
     if(target.id==="my-name") {
       client.selectedByRoom[client.code]=target.value; state.showAllMatches=false; persist(); render();
@@ -411,6 +425,7 @@ function init() {
     const button=event.target.closest("[data-action]"); if(!button || button.disabled || state.busy) return;
     const action=button.dataset.action;
     const d=draft();
+    if(action==="play-audio") playAudio(button.dataset.audioKey);
     if(action==="step") navigate("interview",Number(button.dataset.step));
     if(action==="previous") {
       if(state.editingReview) navigate("review"); else if(state.step===0) navigate("home"); else navigate("interview",state.step-1);
