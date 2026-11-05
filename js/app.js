@@ -128,7 +128,7 @@ function init() {
     else page = renderHome();
     app.innerHTML = `<div class="app-shell">
       <header class="site-header">
-        <a class="brand" href="#/" aria-label="홈"><img src="./assets/logo.svg" alt=""><span class="brand-name"><span class="brand-caption">너와 나, 우리의 취향</span></span></a>
+        <a class="brand" href="#/" aria-label="홈"><img src="./assets/logo.svg" alt=""></a>
         <nav class="main-nav" aria-label="주 메뉴">
           <a class="nav-link ${navActive === "home" ? "active" : ""}" href="#/" ${navActive === "home" ? 'aria-current="page"' : ""}>${icon("chat",17)}짝 인터뷰</a>
           <a class="nav-link ${navActive === "dashboard" ? "active" : ""}" href="#/dashboard" ${navActive === "dashboard" ? 'aria-current="page"' : ""}>${icon("chart",17)}우리 반 대시보드</a>
