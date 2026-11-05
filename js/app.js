@@ -244,7 +244,7 @@ function init() {
   }
   function renderCharts(responses) {
     const data = summarize(responses);
-    const colors=["#8b9e64","#e6ae58","#a9b9a3","#c68f69"];
+    const colors=["#84AFC2","#00000024","#00000024","#00000024"];
     return `<div class="charts-header"><div><span class="eyebrow">LES GOÛTS DE NOTRE CLASSE</span><h2>우리 반은 어떤 걸 좋아할까?</h2></div><p>각 질문 하나씩 선택 · 최종 제출 ${responses.length}명 기준</p></div><div class="charts-grid">${QUESTIONS.map((q,qi)=>`<section class="chart-card card" aria-labelledby="chart-${qi}"><div class="chart-title"><span class="chart-number">0${qi+1}</span><div><h3 id="chart-${qi}">${e(q.short)}</h3><p lang="fr">${e(q.title)}</p></div></div><div class="chart-rows">${q.options.map((o,oi)=>`<div class="chart-option"><div class="chart-label-line"><p class="chart-label" id="chart-label-${qi}-${oi}"><b>${LETTERS[oi]}.</b> ${e(o.ko)}<br><span lang="fr">${e(o.fr)}</span></p><span class="chart-value"><strong>${data[qi].counts[oi]}명</strong>${data[qi].percentages[oi]}%</span></div><progress class="chart-bar" value="${data[qi].counts[oi]}" max="${Math.max(1,responses.length)}" style="--bar-color:${colors[oi]}" aria-labelledby="chart-label-${qi}-${oi}" aria-valuetext="${data[qi].counts[oi]}명, ${data[qi].percentages[oi]}퍼센트">${data[qi].percentages[oi]}%</progress></div>`).join("")}</div><p class="chart-footer">${responses.length ? "비율은 반올림하여 합계가 100%와 다를 수 있어요." : "아직 제출한 응답이 없어요."}</p></section>`).join("")}</div>`;
   }
   function renderDashboard() {
