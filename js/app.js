@@ -149,7 +149,7 @@ function init() {
     const rows = owned();
     return `<div class="home-layout">
       <section class="intro-panel" aria-label="짝 인터뷰">
-        <h1 class="intro-title" tabindex="-1">나와 가장 잘 맞는 친구는</h1>
+        <img class="intro-image" src="./assets/interview-partners.png" alt="빨간색과 노란색 옷을 입은 두 친구 인형"><h1 class="intro-title" tabindex="-1">나와 가장 잘 맞는 친구는?</h1>
       </section>
       <section class="welcome-card card">
         <form class="home-form" data-form="start" id="start-form">
